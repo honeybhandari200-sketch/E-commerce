@@ -1,0 +1,31 @@
+{
+  "name": "jamstack-ecommerce",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "npx -y -p node@16 node node_modules/.bin/next dev",
+    "build": "npx -y -p node@16 node node_modules/.bin/next build",
+    "start": "npx -y -p node@16 node node_modules/.bin/next start",
+    "db:migrate": "node scripts/migrate.js",
+    "db:seed": "node scripts/seed.js",
+    "db:setup": "node scripts/migrate.js && node scripts/seed.js"
+  },
+  "dependencies": {
+    "@stripe/react-stripe-js": "^1.1.2",
+    "@stripe/stripe-js": "^1.11.0",
+    "autoprefixer": "^10.1.0",
+    "bcryptjs": "^2.4.3",
+    "cookie": "^0.6.0",
+    "jsonwebtoken": "^9.0.3",
+    "next": "10.0.4",
+    "pg": "^8.23.1",
+    "postcss": "^8.2.2",
+    "react": "17.0.1",
+    "react-dom": "17.0.1",
+    "react-icons": "^4.1.0",
+    "react-toastify": "^6.2.0",
+    "stripe": "^14.25.0",
+    "tailwindcss": "^2.0.2",
+    "uuid": "^8.3.2"
+  }
+}

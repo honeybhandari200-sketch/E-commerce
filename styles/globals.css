@@ -1,0 +1,565 @@
+/* ./styles/globals.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: "Eina";
+  src: url("/fonts/Eina.otf");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Eina Light";
+  src: url("/fonts/Eina-Light.otf");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Eina SemiBold";
+  src: url("/fonts/Eina-SemiBold.otf");
+  font-display: swap;
+}
+
+@layer base {
+  body {
+    font-family: Eina, -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+    color: rgba(0, 0, 0, .8);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  p, h1, h2, h3, h4, h5 {
+    color: rgba(0, 0, 0, .8);
+  }
+}
+
+@layer components {
+  /* Shared page width so header, content and footer always line up */
+  .site-container {
+    width: 100%;
+    max-width: 1440px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  @media (min-width: 600px) {
+    .site-container {
+      padding-left: 2.5rem;
+      padding-right: 2.5rem;
+    }
+  }
+
+  .nav-link {
+    @apply text-smaller text-gray-700 mr-6 transition-colors;
+  }
+
+  .nav-link:hover {
+    @apply text-gray-900;
+  }
+
+  .footer-link {
+    @apply text-sm text-gray-600 transition-colors;
+  }
+
+  .footer-link:hover {
+    @apply text-gray-900;
+  }
+}
+
+.Toastify__progress-bar--default {
+  background: #89bdf9 !important;
+}
+
+/* ---------- Order receipt: printing animation ---------- */
+.receipt-printer {
+  position: relative;
+  z-index: 2;
+  width: 340px;
+  max-width: calc(100vw - 2rem);
+  height: 22px;
+  border-radius: 10px 10px 6px 6px;
+  background: linear-gradient(#3a3a3a, #111);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, .25);
+}
+
+/* the slot the paper comes out of */
+.receipt-printer::after {
+  content: "";
+  position: absolute;
+  left: 18px;
+  right: 18px;
+  bottom: 5px;
+  height: 4px;
+  border-radius: 2px;
+  background: #000;
+}
+
+.receipt-printer-light {
+  position: absolute;
+  top: 5px;
+  right: 14px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #4ade80;
+  animation: receipt-blink .25s steps(2) 11, receipt-ready 0s 2.8s forwards;
+}
+
+.receipt-feed {
+  width: 300px;
+  max-width: calc(100vw - 3rem);
+  margin-top: -9px;
+  padding: 0 6px 16px;
+  overflow: hidden;
+}
+
+.receipt-paper {
+  position: relative;
+  padding: 28px 22px 18px;
+  background: #fffdf8;
+  color: #222;
+  font-family: "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace;
+  font-size: 12px;
+  line-height: 1.6;
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, .12));
+  transform: translateY(-101%);
+  animation: receipt-print 2.8s cubic-bezier(.3, .7, .4, 1) .3s forwards;
+}
+
+.receipt-paper p,
+.receipt-paper span {
+  color: #222;
+  font-family: inherit;
+}
+
+/* torn zig-zag bottom edge */
+.receipt-paper::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -10px;
+  height: 10px;
+  background:
+    linear-gradient(-45deg, transparent 7px, #fffdf8 0) 0 0 / 14px 10px repeat-x,
+    linear-gradient(45deg, transparent 7px, #fffdf8 0) 0 0 / 14px 10px repeat-x;
+}
+
+.receipt-paper .receipt-muted {
+  color: #777;
+  font-size: 11px;
+}
+
+.receipt-divider {
+  margin: 10px 0;
+  border-top: 1px dashed #bbb;
+}
+
+.receipt-barcode {
+  display: flex;
+  justify-content: center;
+  height: 44px;
+  margin: 18px 0 8px;
+}
+
+.receipt-barcode span {
+  display: block;
+  height: 100%;
+  background: #222;
+}
+
+.receipt-stamp {
+  position: absolute;
+  bottom: 122px;
+  right: 16px;
+  padding: 2px 12px;
+  border: 3px solid #dc2626;
+  border-radius: 6px;
+  color: #dc2626;
+  font-family: Eina SemiBold, Eina, sans-serif;
+  font-size: 26px;
+  letter-spacing: .12em;
+  opacity: 0;
+  mix-blend-mode: multiply;
+  animation: receipt-stamp .35s cubic-bezier(.2, 1.6, .4, 1) 3s forwards;
+}
+
+.receipt-fade {
+  opacity: 0;
+  animation: receipt-fade .5s ease-out forwards;
+}
+
+/* Paper feeds out in short bursts, like a thermal printer */
+@keyframes receipt-print {
+  0%   { transform: translateY(-101%); }
+  12%  { transform: translateY(-84%); }
+  18%  { transform: translateY(-84%); }
+  32%  { transform: translateY(-63%); }
+  38%  { transform: translateY(-63%); }
+  52%  { transform: translateY(-41%); }
+  58%  { transform: translateY(-41%); }
+  72%  { transform: translateY(-20%); }
+  78%  { transform: translateY(-20%); }
+  100% { transform: translateY(0); }
+}
+
+@keyframes receipt-blink {
+  to { background: #14532d; }
+}
+
+@keyframes receipt-ready {
+  to { background: #4ade80; }
+}
+
+@keyframes receipt-stamp {
+  from { opacity: 0; transform: scale(2.4) rotate(-4deg); }
+  to   { opacity: .85; transform: scale(1) rotate(-14deg); }
+}
+
+@keyframes receipt-fade {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* Receipts in order history: no printing animation */
+.receipt-static .receipt-paper,
+.receipt-static .receipt-stamp,
+.receipt-static .receipt-fade,
+.receipt-static .receipt-printer-light {
+  animation-duration: 0s !important;
+  animation-delay: 0s !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .receipt-paper,
+  .receipt-stamp,
+  .receipt-fade,
+  .receipt-printer-light {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
+  }
+}
+
+/* Printing: show only the receipt */
+@media print {
+  header, footer, .receipt-printer, .receipt-actions, .Toastify { display: none !important; }
+  main h1, main h1 + p { display: none !important; }
+  .receipt-feed { overflow: visible; margin: 0 auto; }
+  .receipt-paper { transform: none; animation: none; filter: none; }
+  .receipt-stamp { opacity: .85; transform: rotate(-14deg); animation: none; }
+}
+
+/* ---------- Checkout: live payment card ---------- */
+.payment-card-scene {
+  position: relative;
+  isolation: isolate; /* keeps the glow behind the card, not behind the page */
+  width: 100%;
+  max-width: 340px;
+  aspect-ratio: 1.586;
+  perspective: 1200px;
+  margin: 0 auto;
+}
+
+.payment-card {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform .8s cubic-bezier(.4, .2, .2, 1);
+}
+
+.payment-card.is-flipped {
+  transform: rotateY(180deg);
+}
+
+.payment-card-face {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px 22px;
+  border-radius: 16px;
+  overflow: hidden;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  color: #1e293b;
+  box-shadow: 0 18px 40px -12px rgba(30, 41, 59, .35), 0 2px 6px rgba(30, 41, 59, .08);
+  transition: background .6s ease, color .6s ease;
+}
+
+.payment-card-back {
+  transform: rotateY(180deg);
+  padding: 22px 0 18px;
+  justify-content: flex-start;
+}
+
+/* Brand themes: the card recolors as soon as Stripe detects the brand */
+.card-theme-default {
+  background:
+    repeating-linear-gradient(115deg, transparent 0 14px, rgba(255, 255, 255, .18) 14px 15px),
+    linear-gradient(120deg, #f8fafc 0%, #e2e8f0 55%, #cbd5e1 100%);
+}
+.card-theme-visa {
+  background:
+    repeating-linear-gradient(115deg, transparent 0 14px, rgba(255, 255, 255, .22) 14px 15px),
+    linear-gradient(120deg, #f8fafc 0%, #dbeafe 45%, #93c5fd 75%, #6366f1 100%);
+}
+.card-theme-mastercard {
+  background:
+    repeating-linear-gradient(115deg, transparent 0 14px, rgba(255, 255, 255, .18) 14px 15px),
+    linear-gradient(120deg, #fff7ed 0%, #fed7aa 45%, #fb923c 75%, #dc2626 100%);
+}
+.card-theme-amex {
+  background:
+    repeating-linear-gradient(115deg, transparent 0 14px, rgba(255, 255, 255, .2) 14px 15px),
+    linear-gradient(120deg, #f0fdfa 0%, #99f6e4 45%, #2dd4bf 75%, #0f766e 100%);
+}
+.card-theme-discover {
+  background:
+    repeating-linear-gradient(115deg, transparent 0 14px, rgba(255, 255, 255, .2) 14px 15px),
+    linear-gradient(120deg, #fffbeb 0%, #fde68a 45%, #f59e0b 80%, #b45309 100%);
+}
+
+/* soft moving light across the card */
+.payment-card-sheen {
+  position: absolute;
+  inset: -50%;
+  background: linear-gradient(105deg, transparent 40%, rgba(255, 255, 255, .55) 50%, transparent 60%);
+  transform: translateX(-60%);
+  animation: card-sheen 6s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.payment-card-chip {
+  width: 38px;
+  height: 28px;
+  border-radius: 6px;
+  background:
+    linear-gradient(90deg, transparent 32%, rgba(0, 0, 0, .18) 32% 34%, transparent 34% 66%, rgba(0, 0, 0, .18) 66% 68%, transparent 68%),
+    linear-gradient(0deg, transparent 45%, rgba(0, 0, 0, .18) 45% 55%, transparent 55%),
+    linear-gradient(135deg, #e5e7eb, #9ca3af);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .15);
+}
+
+.payment-card-contactless {
+  position: relative;
+  width: 16px;
+  height: 20px;
+  margin-left: 10px;
+}
+.payment-card-contactless span {
+  position: absolute;
+  top: 50%;
+  border: 2px solid rgba(30, 41, 59, .45);
+  border-left-color: transparent;
+  border-bottom-color: transparent;
+  border-radius: 50%;
+  transform: translateY(-50%) rotate(45deg);
+}
+.payment-card-contactless span:nth-child(1) { left: 0; width: 6px; height: 6px; }
+.payment-card-contactless span:nth-child(2) { left: -3px; width: 12px; height: 12px; }
+.payment-card-contactless span:nth-child(3) { left: -6px; width: 18px; height: 18px; }
+
+.payment-card-store {
+  font-family: "Eina SemiBold", Eina, sans-serif;
+  font-size: 15px;
+  letter-spacing: .2em;
+  color: #1e3a8a;
+}
+.payment-card-tier {
+  font-size: 7px;
+  letter-spacing: .35em;
+  color: rgba(30, 58, 138, .7);
+}
+
+.payment-card-number {
+  display: flex;
+  gap: 14px;
+  font-family: "SFMono-Regular", Menlo, Consolas, monospace;
+  font-size: 19px;
+  letter-spacing: .08em;
+  color: #1e293b;
+}
+.payment-card-number span {
+  display: inline-block;
+  transition: transform .3s ease, color .3s ease;
+}
+/* every keystroke in Stripe's field re-triggers this shimmer */
+.payment-card-number.is-typing span {
+  animation: card-type .35s ease;
+}
+.payment-card-number.is-complete span {
+  color: #0f172a;
+}
+.payment-card-number.is-complete span:last-child {
+  animation: card-pop .45s cubic-bezier(.2, 1.6, .4, 1);
+}
+
+.payment-card-field-number,
+.payment-card-field {
+  position: relative;
+  padding: 4px 6px;
+  margin: 0 -6px;
+  border-radius: 8px;
+  border: 1.5px solid transparent;
+  transition: border-color .3s ease, background .3s ease;
+}
+.payment-card-field-number.is-focused,
+.payment-card-field.is-focused {
+  border-color: rgba(30, 64, 175, .55);
+  background: rgba(255, 255, 255, .25);
+}
+
+.payment-card-label {
+  font-size: 7px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: rgba(30, 41, 59, .6) !important;
+}
+.payment-card-value {
+  font-family: "SFMono-Regular", Menlo, Consolas, monospace;
+  font-size: 12px;
+  letter-spacing: .08em;
+  color: #1e293b !important;
+}
+.payment-card-name {
+  max-width: 150px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.payment-card-brand {
+  font-family: "Eina SemiBold", Eina, sans-serif;
+  font-style: italic;
+  font-size: 18px;
+  letter-spacing: .02em;
+  color: #1e3a8a !important;
+  animation: card-pop .45s cubic-bezier(.2, 1.6, .4, 1);
+}
+
+.payment-card-stripe {
+  height: 40px;
+  background: #1f2937;
+}
+.payment-card-signature {
+  display: flex;
+  align-items: center;
+  margin: 18px 22px 0;
+  height: 34px;
+  background: #fff;
+  border-radius: 4px;
+}
+.payment-card-signature-lines {
+  flex: 1;
+  height: 100%;
+  border-radius: 4px 0 0 4px;
+  background: repeating-linear-gradient(-45deg, #f1f5f9 0 4px, #e2e8f0 4px 8px);
+}
+.payment-card-cvc {
+  width: 56px;
+  text-align: center;
+  font-family: "SFMono-Regular", Menlo, Consolas, monospace;
+  font-size: 14px;
+  letter-spacing: .15em;
+  color: #94a3b8;
+}
+.payment-card-cvc.is-complete {
+  color: #0f172a;
+}
+.payment-card-back-note {
+  margin: 12px 22px 0;
+  font-size: 9px;
+  line-height: 1.4;
+  color: rgba(30, 41, 59, .6) !important;
+}
+.payment-card-brand-back {
+  position: absolute;
+  right: 22px;
+  bottom: 14px;
+}
+
+/* paying / paid states */
+.payment-card-glow {
+  position: absolute;
+  inset: 6%;
+  z-index: -1;
+  border-radius: 24px;
+  opacity: 0;
+  transition: opacity .5s ease;
+}
+.payment-card-scene.is-processing .payment-card {
+  animation: card-breathe 1.4s ease-in-out infinite;
+}
+.payment-card-scene.is-paid .payment-card-glow {
+  opacity: 1;
+  background: #4ade80;
+  filter: blur(28px);
+  animation: card-glow 1.6s ease-in-out infinite;
+}
+.payment-card-scene.is-paid .payment-card {
+  transform: none;
+}
+
+/* Stripe input wrappers on the checkout form */
+.stripe-field {
+  display: flex;
+  align-items: center;
+  height: 48px;
+  padding: 0 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  background: #fff;
+  transition: border-color .2s ease, box-shadow .2s ease;
+}
+.stripe-field.is-focused {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, .18);
+}
+.stripe-field.is-invalid {
+  border-color: #dc2626;
+}
+.stripe-field > div {
+  flex: 1;
+}
+
+.checkout-paid-enter {
+  animation: receipt-fade .5s ease-out both;
+}
+
+@keyframes card-sheen {
+  0%, 60% { transform: translateX(-60%); }
+  100% { transform: translateX(60%); }
+}
+@keyframes card-type {
+  0% { transform: translateY(0); }
+  40% { transform: translateY(-3px); color: #2563eb; }
+  100% { transform: translateY(0); }
+}
+@keyframes card-pop {
+  0% { transform: scale(.6); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+@keyframes card-breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.025); }
+}
+@keyframes card-glow {
+  0%, 100% { opacity: .55; }
+  50% { opacity: .9; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .payment-card,
+  .payment-card-sheen,
+  .payment-card-number span,
+  .payment-card-brand,
+  .payment-card-scene .payment-card,
+  .payment-card-glow {
+    animation: none !important;
+    transition: none !important;
+  }
+}
